@@ -199,7 +199,10 @@ Avoid vague placeholders like [insert here]. Fill all with default legal languag
             ]
         })
 
-        content = res.json()['choices'][0]['message']['content']
+        response_data = res.json()
+        if "choices" not in response_data:
+            return f"❌ API Error: {response_data}", ""
+        content = response_data["choices"][0]["message"]["content"]
         contract_part, analysis_part = content.split("RISK/CLAUSE ANALYSIS", 1) if "RISK/CLAUSE ANALYSIS" in content else (content, "")
 
         st.subheader("📄 Contract Text")
