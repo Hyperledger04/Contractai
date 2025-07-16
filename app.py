@@ -7,7 +7,7 @@ import tempfile
 
 
 # CONFIGURATION
-API_KEY = "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"
+API_KEY = st.secrets["OPENROUTER_API_KEY"]
 MODEL = "mistralai/mistral-7b-instruct"
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
