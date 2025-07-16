@@ -122,9 +122,7 @@ You are tasked with drafting a complete, enforceable **{contract_type}** between
 The final agreement must follow a clear **clause-by-clause legal structure** using professional formatting and enforceable legal language. Use defined clause headings and maintain legal precision.
 
 ### 🔐 Mandatory Clauses (Structure)
-Include the following *at a minimum* (based on agreement type):
-
-1. Title and Introduction
+Include the following *at a minimum* (based on agreement type): 1. Title and Introduction
 2. Definitions and Interpretation
 3. Scope of Work / Employment / Services
 4. Duties and Obligations of Parties
@@ -201,31 +199,26 @@ Avoid vague placeholders like [insert here]. Fill all with default legal languag
 
         response_data = res.json()
         if "choices" not in response_data:
-            return f"❌ API Error: {response_data}", ""
-        content = response_data["choices"][0]["message"]["content"]
-        contract_part, analysis_part = content.split("RISK/CLAUSE ANALYSIS", 1) if "RISK/CLAUSE ANALYSIS" in content else (content, "")
+            st.error(f"❌ API Error: {response_data}")
+        else:
+            content = response_data["choices"][0]["message"]["content"]
+            contract_part, analysis_part = content.split("RISK/CLAUSE ANALYSIS", 1) if "RISK/CLAUSE ANALYSIS" in content else (content, "")
 
-        st.subheader("📄 Contract Text")
-        st.text_area("Generated Contract", value=contract_part.strip(), height=400)
+            # === Contract Output ===
+            st.subheader("📄 Contract Text")
+            st.text_area("Generated Contract", value=contract_part.strip(), height=400)
 
+            # === Risk & Clause Analysis ===
+            st.subheader("🛡️ Risk & Clause Analysis")
 
-# === Risk & Clause Analysis ===
-        st.subheader("🛡️ Risk & Clause Analysis")
+            if analysis_part.strip().startswith("---"):
+                analysis_part = analysis_part.split("---")[-1].strip()
 
-# Filter any "---" separator if accidentally copied by AI
-        if analysis_part.strip().startswith("---"):
-            analysis_part = analysis_part.split("---")[-1].strip()
+            risky_keywords = ["indemnify", "liability", "terminate", "breach", "waive", "exclusive", "discretion"]
+            for word in risky_keywords:
+                analysis_part = analysis_part.replace(word, f"**:red[{word}]**")
 
-# Highlight risky keywords
-        risky_keywords = ["indemnify", "liability", "terminate", "breach", "waive", "exclusive", "discretion"]
-        for word in risky_keywords:
-            analysis_part = analysis_part.replace(word, f"**:red[{word}]**")
-
-# Render as markdown
-        st.markdown(analysis_part, unsafe_allow_html=True)
-
-
-
+            st.markdown(analysis_part, unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"Error generating contract: {e}")
+        st.error(f"❌ Error generating contract: {e}")
