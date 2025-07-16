@@ -3,21 +3,9 @@
 import streamlit as st
 import requests
 import os
-from io import BytesIO
-from fpdf import FPDF
 import tempfile
 
-def generate_pdf(text):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.set_auto_page_break(auto=True, margin=15)
-    for line in text.split("\n"):
-        pdf.multi_cell(0, 10, line)
-    buffer = BytesIO()
-    pdf.output(buffer)
-    buffer.seek(0)
-    return buffer
+
 # CONFIGURATION
 API_KEY = "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"
 MODEL = "mistralai/mistral-7b-instruct"
@@ -217,15 +205,6 @@ Avoid vague placeholders like [insert here]. Fill all with default legal languag
         st.subheader("📄 Contract Text")
         st.text_area("Generated Contract", value=contract_part.strip(), height=400)
 
-# Generate PDF button
-        pdf_file = generate_pdf(contract_part.strip())
-        st.markdown("### 📥 Download Your Contract:")
-        st.download_button(
-            label="Download as PDF",
-            data=pdf_file,
-            file_name=f"{contract_type.replace(' ', '_')}.pdf",
-            mime="application/pdf"
-        )
 
 # === Risk & Clause Analysis ===
         st.subheader("🛡️ Risk & Clause Analysis")
@@ -243,30 +222,6 @@ Avoid vague placeholders like [insert here]. Fill all with default legal languag
         st.markdown(analysis_part, unsafe_allow_html=True)
 
 
-
-        from io import BytesIO
-        from fpdf import FPDF
-
-        def generate_pdf(text):
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=12)
-            pdf.set_auto_page_break(auto=True, margin=15)
-            for line in text.split("\\n"):
-                pdf.multi_cell(0, 10, line)
-            pdf_buffer = BytesIO()
-            pdf.output(pdf_buffer)
-            pdf_buffer.seek(0)
-            return pdf_buffer
-
-            # Generate and display download button
-            pdf_file = generate_pdf(contract_part.strip())
-            st.download_button(
-            label="📥 Download Contract PDF",
-            data=pdf_file,
-            file_name=f"{contract_type.replace(' ', '_')}.pdf",
-            mime="application/pdf"
-        )
 
 
     except Exception as e:
