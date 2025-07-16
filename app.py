@@ -7,7 +7,7 @@ import tempfile
 
 
 # CONFIGURATION
-API_KEY = "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"
+API_KEY = "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"
 MODEL = "mistralai/mistral-7b-instruct"
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
